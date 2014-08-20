@@ -15,7 +15,7 @@ configuration:
 
 # this app works in all engines - it does not contain 
 # any host application specific commands
-supported_engines: 
+supported_engines: [tk-maya]
 
 # the Shotgun fields that this engine needs in order to operate correctly
 requires_shotgun_fields:
@@ -30,5 +30,5 @@ requires_core_version: "v0.14.28"
 requires_engine_version:
 
 # the frameworks required to run this app
-frameworks:
+frameworks: tk-frameworks-wtd
     
