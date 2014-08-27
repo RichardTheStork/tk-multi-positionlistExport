@@ -101,7 +101,8 @@ def setAssetDict(name, longName, asset, assetType, animated, position, rotation,
 
 def createPositionlist():
 	childrenAndParentsDict, typeDict = getAllParentsAndTypeDict(cmds.listRelatives(cmds.ls(type = "locator") ,parent = True, type = "transform"))
-	cmds.select(getMainSceneObjects())
+	# cmds.select(getMainSceneObjects())
+	cmds.select(cmds.listRelatives(cmds.ls(type = "locator") ,parent = True, type = "transform"))
 	tempData, tempPath = retrieveDataFromSelection(allParents = childrenAndParentsDict, allTypes = typeDict)
 	return tempData, tempPath
 	
