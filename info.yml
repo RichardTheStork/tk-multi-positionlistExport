@@ -30,5 +30,5 @@ requires_core_version: "v0.14.28"
 requires_engine_version:
 
 # the frameworks required to run this app
-frameworks: tk-frameworks-wtd
+frameworks: https://github.com/RichardTheStork/tk-framework-wtd.git
     
