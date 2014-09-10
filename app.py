@@ -66,10 +66,11 @@ class StgkPositionlistExport(Application):
 		"""		
 		print "start"
 		message = "Exported positionlist to \n"
-		
-		returnValue, path = createPositionlist()
-		message += path
-
+		try:
+			returnValue, path = createPositionlist()
+			message += path
+		except:
+			message = "NO POSITIONLIST EXPORTED!"
 		print "end"
 		
 		# if new_in is None or new_out is None:
@@ -100,9 +101,9 @@ def setAssetDict(name, longName, asset, assetType, animated, position, rotation,
 	return name, tempDict
 
 def createPositionlist():
-	childrenAndParentsDict, typeDict = getAllParentsAndTypeDict(cmds.listRelatives(cmds.ls(type = "locator") ,parent = True, type = "transform"))
-	# cmds.select(getMainSceneObjects())
-	cmds.select(cmds.listRelatives(cmds.ls(type = "locator") ,parent = True, type = "transform"))
+	childrenAndParentsDict, typeDict = getAllParentsAndTypeDict()
+	cmds.select(getMainSceneObjects())
+	cmds.select(cmds.listRelatives(cmds.ls(type = "locator", allPaths= True) ,parent = True, type = "transform", path = True))
 	tempData, tempPath = retrieveDataFromSelection(allParents = childrenAndParentsDict, allTypes = typeDict)
 	return tempData, tempPath
 	
@@ -110,13 +111,13 @@ def getAllParentsAndTypeDict(objectList = None):
 	childrenAndParentsDict = {}
 	
 	if objectList == None:
-		objectList = cmds.listRelatives(cmds.ls(type = "locator") ,parent = True, type = "transform")
+		objectList = cmds.listRelatives(cmds.ls(type = "locator", allPaths= True) ,parent = True, type = "transform", path = True)
 	typeDict = {}
 	parentsDict = {}
 	for obj in objectList:
 		if obj not in typeDict:
 			typeDict[str(obj)] = "Prop"
-		tempParent = cmds.listRelatives(obj, parent = True)
+		tempParent = cmds.listRelatives(obj, parent = True, path = True)
 		if tempParent != None:
 			typeDict[str(tempParent[0])] = "Set"
 			parentsDict[str(obj)] = str(tempParent[0])
@@ -132,13 +133,13 @@ def getAllParentsAndTypeDict(objectList = None):
 	return childrenAndParentsDict, typeDict
 	
 def getMainSceneObjects():
-	sceneObjects = cmds.listRelatives(cmds.ls(type = "locator") ,allParents = True, type = "transform")
+	sceneObjects = cmds.listRelatives(cmds.ls(type = "locator", allPaths= True) ,allParents = True, type = "transform", path = True)
 	
 	mainObjectsList = []
 	for obj in sceneObjects:
-		if cmds.listRelatives(obj, allParents = True, type = "transform") == None:
+		if cmds.listRelatives(obj, allParents = True, type = "transform", path = True) == None:
 			mainObjectsList.append(obj)
-	# print mainObjectsList
+	print mainObjectsList
 	return mainObjectsList
 	
 def getDataFolder():
@@ -152,7 +153,7 @@ def getDataFolder():
 
 def retrieveDataFromSelection(allTypes = None, allParents = None):
 	transformDataDict = {}
-	selected = cmds.ls(sl = True)
+	selected = cmds.ls(sl = True, allPaths= True)
 	print allParents
 	print allTypes
 	for obj in selected:
@@ -194,10 +195,10 @@ def getSceneName():
 		return None
 		
 def getParentsOfObject(object):
-	return cmds.listRelatives(object, parent = True)
+	return cmds.listRelatives(object, parent = True, path = True)
 		
 def checkForChildren(object):
-	tempChildren = cmds.listRelatives(object, allDescendents = True, type = "locator")
+	tempChildren = cmds.listRelatives(object, allDescendents = True, type = "locator", path = True)
 	if tempChildren != None:
 		return False
 	return tempChildren
