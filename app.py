@@ -14,6 +14,8 @@ import maya.cmds as cmds
 import json
 import os
 
+import tank
+wtd_framework =  tank.platform.import_framework("tk-framework-wtd", "pipeline")
 
 class StgkPositionlistExport(Application):
 	"""
@@ -62,19 +64,6 @@ class StgkPositionlistExport(Application):
 def superPrint(stringInput):
 	stringTemp = "%s %s %s" %('#'*10,stringInput,'#'*10)
 	print stringTemp
-	
-def setAssetDict(name, longName, asset, assetType, animated, position, rotation, scale, parentAssets = []):
-	tempDict = {}
-	tempDict["name"] = name
-	tempDict["longName"] = longName
-	tempDict["asset"] = asset
-	tempDict["assetType"] = assetType
-	tempDict["animated"] = animated
-	tempDict["position"] = position
-	tempDict["rotation"] = rotation
-	tempDict["scale"] = scale
-	tempDict["parentAssets"] = parentAssets
-	return name, tempDict
 
 def createPositionlist():
 	childrenAndParentsDict, typeDict = getAllParentsAndTypeDict()
@@ -192,7 +181,7 @@ def getObjectData(object, parents = [], assetType = None):
 	position = cmds.xform(object, ws=True, q=True, t=True)
 	rotation = cmds.xform(object, ws=True, q=True, ro=True)
 	scale = cmds.xform(object, r=True, q=True, s=True)
-	return setAssetDict(name, longName, asset, assetType, animated, position, rotation, scale, parents)
+	return name, wtd_framework.Positionlist.setAssetDict(name, longName, asset, assetType, animated, position, rotation, scale, parents)
 		
 def saveJsonPositionList(input, targetPath = None):
 	toBeSaved = json.dumps(input , sort_keys=True ,ensure_ascii=True)
