@@ -54,11 +54,9 @@ def getMainSceneObjects():
 def retrieveDataFromSelection(allTypes = None, allParents = None):
 	transformDataDict = {}
 	selected = cmds.ls(sl = True, allPaths= True)
-	print allParents
-	print allTypes
+	
 	for obj in selected:
 		print obj
-		print str(obj)
 		assetType = None
 		parents = []
 		if allTypes != None:
@@ -70,7 +68,6 @@ def retrieveDataFromSelection(allTypes = None, allParents = None):
 				parents = allParents[str(obj)]
 		tempName, tempOutput = getObjectData(obj, parents = parents, assetType = assetType)
 		transformDataDict[tempName] = tempOutput
-		
 	targetPath = "%spositionlist.txt" %(getDataFolder())
 	jsonData = wtd_fw.createJsonPositionList(transformDataDict, targetPath)
 	return jsonData, targetPath
@@ -114,7 +111,8 @@ def checkForChildren(object):
 		
 def getObjectData(object, parents = [], assetType = None):
 	longName = str(object)
-	asset = wtd_fw.positionlist.getAssetNameFromObject(longName)	
+	# asset = wtd_fw.positionlist.getAssetNameFromObject(longName)	
+	asset = getAssetNameFromObject(longName)	
 	name = longName[ longName.find(asset) : ]
 	if assetType == None:
 		assetType = "prop"
@@ -126,4 +124,17 @@ def getObjectData(object, parents = [], assetType = None):
 	scale = cmds.xform(object, r=True, q=True, s=True)
 	# posModule = wtd_framework.import_module("Positionlist")
 	return name, wtd_fw.positionlist.setAssetDict(name, longName, asset, assetType, animated, position, rotation, scale, parents)
-		
+	
+def getAssetNameFromObject(obj):
+	assetName = obj
+	tempAssetName = ""
+	if "_" in obj:
+		if obj.find("_") == obj.rfind("_"):
+			tempAssetName = obj.strip("0123456789")
+			if tempAssetName.endswith("_"):
+				assetName = tempAssetName[ : -1]
+			else:
+				assetName = assetName[assetName.find("_") +1 : ]
+		else:
+			assetName = obj[obj.find("_")+1 : ].strip("0123456789")[ : -1]
+	return assetName
