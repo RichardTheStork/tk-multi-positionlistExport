@@ -32,4 +32,4 @@ requires_engine_version:
 # the frameworks required to run this app
 frameworks: 
     - {"name": "tk-framework-widget", "version": "v0.x.x"}
-    
+    - {"name": "tk-framework-wtd", "version": "v0.x.x"}

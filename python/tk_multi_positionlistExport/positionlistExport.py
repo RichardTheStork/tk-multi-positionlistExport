@@ -64,7 +64,7 @@ def retrieveDataFromSelection(allTypes = None, allParents = None):
 				assetType = allTypes[str(obj)]
 		if allParents != None:
 			if str(obj) in allParents:
-				print "FOUND in ALLPARENTS"
+				# print "FOUND in ALLPARENTS"
 				parents = allParents[str(obj)]
 		tempName, tempOutput = getObjectData(obj, parents = parents, assetType = assetType)
 		transformDataDict[tempName] = tempOutput
